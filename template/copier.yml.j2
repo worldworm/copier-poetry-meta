@@ -1,0 +1,43 @@
+_subdirectory: template
+_templates_suffix: .jinja
+_answers_file: .copier-answers.[[ "poetry" if template_suffix is none else "poetry-" ~ template_suffix ]].yml
+
+project_name:
+  type: str
+  help: Project name
+
+project_description:
+  type: str
+  help: Project description
+
+github_username:
+  type: str
+  help: GitHub username
+
+github_repository_namespace:
+  type: str
+  help: Repository namespace
+  default: "{{ github_username }}"
+
+github_repository_name:
+  type: str
+  help: Repository name
+  default: "{{ project_name|lower|replace('_', '-')|replace(' ', '-') }}"
+
+package_distribution_name:
+  type: str
+  help: Package distribution name (for `pip install NAME`)
+  default: "{{ project_name|lower|replace('_', '-')|replace(' ', '-') }}"
+
+package_import_name:
+  type: str
+  help: Package import name (for `import NAME` in Python code)
+  default: "{{ project_name|lower|replace('-', '_')|replace(' ', '_') }}"
+
+copyright_license:
+  type: str
+  help: Project license
+  default: MIT
+  choices:
+  - MIT
+  -
