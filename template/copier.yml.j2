@@ -2,6 +2,11 @@ _subdirectory: template
 _templates_suffix: .jinja
 _answers_file: .copier-answers.[[ "poetry" if template_suffix is none else "poetry-" ~ template_suffix ]].yml
 
+_tasks:
+  - "[ -f README.md ] || touch README.md"
+  - "poetry install"
+  - "[ -d .git ] && poetry run pre-commit install --install-hooks || true"
+
 project_name:
   type: str
   help: Project name
