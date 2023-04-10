@@ -2,10 +2,10 @@
 name = "{{ package_distribution_name }}"
 version = "0.1.0"
 description = "{{ project_description }}"
-authors = ["{{ github_username }}"]
+authors = ["{{ repository_username }}"]
 readme = "README.md"
-repository = "https://github.com/{{ github_repository_namespace }}/{{ github_repository_name }}"
-homepage = "https://github.com/{{ github_repository_namespace }}/{{ github_repository_name }}"
+repository = "{{ repository_url }}"
+homepage = "{{ repository_url }}"
 {{ "" if copyright_license == "None" else 'license = "' ~ copyright_license ~ '"' }}
 keywords = []
 packages = [{include = "{{ package_import_name }}"}]

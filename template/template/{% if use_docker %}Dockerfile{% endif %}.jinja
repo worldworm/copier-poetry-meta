@@ -1,12 +1,12 @@
 FROM python:3.10-alpine
 
-LABEL maintainer="{{github_username}}"
-LABEL description="{{project_description}}"
-LABEL org.opencontainers.image.authors="{{github_username}}"
-LABEL org.opencontainers.image.title="{{project_name}}"
-LABEL org.opencontainers.image.description="{{project_description}}"
-LABEL org.opencontainers.image.source="https://github.com/{{ github_repository_namespace }}/{{ github_repository_name }}"
-LABEL org.opencontainers.image.licenses="{{copyright_license}}"
+LABEL maintainer="{{ repository_username }}"
+LABEL description="{{ project_description }}"
+LABEL org.opencontainers.image.authors="{{ repository_username }}"
+LABEL org.opencontainers.image.title="{{ project_name }}"
+LABEL org.opencontainers.image.description="{{ project_description }}"
+LABEL org.opencontainers.image.source="{{ repository_url }}"
+LABEL org.opencontainers.image.licenses="{{ copyright_license }}"
 LABEL org.opencontainers.image.base.name="docker.io/library/python:3.10-alpine"
 
 WORKDIR /app
@@ -23,4 +23,4 @@ RUN poetry install --only main --no-dev --no-root --no-interaction --no-ansi
 
 COPY . /app/
 
-CMD ["poetry", "run", "python", "-m", "{{package_import_name}}"]
+CMD ["poetry", "run", "python", "-m", "{{ package_import_name }}"]
