@@ -45,3 +45,10 @@ repos:
             "-sn", # Don't display the score
             "--rcfile=.project/.pylintrc", # Custom config file
           ]
+  - repo: local
+    hooks:
+      - id: pytest
+        name: pytest
+        entry: pytest
+        language: system
+        pass_filenames: false
