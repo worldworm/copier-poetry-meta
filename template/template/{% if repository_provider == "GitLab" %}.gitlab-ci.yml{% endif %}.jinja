@@ -1,0 +1,44 @@
+stages:
+  - test
+
+pylint:
+  stage: test
+  image: python:3.10
+  only:
+    changes:
+      - .gitlab-ci.yml
+      - .project/.pylintrc
+      - "**/*.py"
+#  tags:
+#    - docker
+  script:
+    - pip3 install poetry
+    - poetry config virtualenvs.create false
+    - poetry install --no-root --no-interaction --no-ansi
+    - pylint --rcfile=.project/.pylintrc $(git ls-files '*.py')
+
+pytest:
+  stage: test
+  image: python:${PY_VERSION}
+  parallel:
+    matrix:
+      - PY_VERSION: ["3.11", "3.10", "3.9", "3.8"]
+  only:
+    changes:
+      - .gitlab-ci.yml
+      - pyproject.toml
+      - poetry.lock
+      - "**/*.py"
+#  tags:
+#    - docker
+  script:
+    - pip3 install poetry
+    - poetry config virtualenvs.create false
+    - poetry install --no-root --no-interaction --no-ansi
+    - pytest --cov={{package_import_name}} --cov-report term --cov-report xml:coverage.xml
+  coverage: '/(?i)total.*? (100(?:\.0+)?\%|[1-9]?\d(?:\.\d+)?\%)$/'
+  artifacts:
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage.xml
