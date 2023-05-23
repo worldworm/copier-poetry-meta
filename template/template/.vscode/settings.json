@@ -1,12 +1,15 @@
 {
     "python.linting.pylintEnabled": true,
-    "python.linting.pylintArgs": [
+    "pylint.args": [
         "--rcfile=.project/.pylintrc"
     ],
     "python.linting.enabled": true,
     "editor.formatOnSave": true,
-    "python.formatting.provider": "autopep8",
-    "editor.codeActionsOnSave": {
-        "source.organizeImports": true
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.autopep8",
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": true
+        }
     }
 }
