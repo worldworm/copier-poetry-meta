@@ -1,5 +1,7 @@
 stages:
   - test
+  - build
+  - publish
 
 pylint:
   stage: test
@@ -9,8 +11,8 @@ pylint:
       - .gitlab-ci.yml
       - .project/.pylintrc
       - "**/*.py"
-#  tags:
-#    - docker
+  # tags:
+  #   - docker
   script:
     - pip3 install poetry
     - poetry config virtualenvs.create false
@@ -29,8 +31,8 @@ pytest:
       - pyproject.toml
       - poetry.lock
       - "**/*.py"
-#  tags:
-#    - docker
+  # tags:
+  #   - docker
   script:
     - pip3 install poetry
     - poetry config virtualenvs.create false
@@ -42,3 +44,69 @@ pytest:
       coverage_report:
         coverage_format: cobertura
         path: coverage.xml
+
+{% if use_docker -%}
+variables:
+  DOCKER_REGISTRY_LOGIN: docker login -u $DOCKER_REGISTRY_USER -p $DOCKER_REGISTRY_PASSWORD $DOCKER_REGISTRY
+  DOCKER_REGISTRY_LOGOUT: docker logout $DOCKER_REGISTRY
+  DOCKER_IMAGE_NAME: $DOCKER_REGISTRY/$DOCKER_NAMESPACE/$CI_PROJECT_NAME
+
+build-docker:
+  stage: build
+  image: docker:dind
+  # tags:
+  #   - docker
+  script:
+    - $DOCKER_REGISTRY_LOGIN
+    - docker build --pull --tag $DOCKER_IMAGE_NAME:$CI_COMMIT_SHA .
+    - docker push $DOCKER_IMAGE_NAME:$CI_COMMIT_SHA
+    - $DOCKER_REGISTRY_LOGOUT
+  except:
+    - tags
+
+.docker-publish: &docker-publish
+  - $DOCKER_REGISTRY_LOGIN
+  - docker pull $DOCKER_IMAGE_NAME:$CI_COMMIT_SHA
+  - docker tag $DOCKER_IMAGE_NAME:$CI_COMMIT_SHA $DOCKER_IMAGE_NAME:$DOCKER_TAG
+  - docker push $DOCKER_IMAGE_NAME:$DOCKER_TAG
+  - $DOCKER_REGISTRY_LOGOUT
+
+publish-docker-edge:
+  stage: publish
+  image: docker:dind
+  variables:
+    GIT_STRATEGY: none
+    DOCKER_TAG: edge
+  # tags:
+  #   - docker
+  script:
+    - *docker-publish
+  only:
+    - main
+
+publish-docker-release:
+  stage: publish
+  image: docker:dind
+  variables:
+    GIT_STRATEGY: none
+    DOCKER_TAG: $CI_COMMIT_TAG
+  # tags:
+  #   - docker
+  script:
+    - *docker-publish
+  only:
+    - tags
+
+publish-docker-latest:
+  stage: publish
+  image: docker:dind
+  variables:
+    GIT_STRATEGY: none
+    DOCKER_TAG: latest
+  # tags:
+  #   - docker
+  script:
+    - *docker-publish
+  only:
+    - tags
+{% endif -%}
