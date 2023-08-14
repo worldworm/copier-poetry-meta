@@ -14,7 +14,7 @@ repos:
       - id: check-poetry
         name: Poetry check
         description: Validates the structure of the pyproject.toml file
-        entry: poetry check
+        entry: poetry[[ " --directory " ~ subdir_name if use_subdir else "" ]] check
         language: system
         pass_filenames: false
         files: pyproject.toml
@@ -49,6 +49,6 @@ repos:
     hooks:
       - id: pytest
         name: pytest
-        entry: pytest
+        entry: pytest[[ " " ~ subdir_name if use_subdir else "" ]]
         language: system
         pass_filenames: false
