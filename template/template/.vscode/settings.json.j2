@@ -1,7 +1,7 @@
 {
     "python.linting.pylintEnabled": true,
     "pylint.args": [
-        "--rcfile=.project/.pylintrc"
+        "--rcfile=[[ subdir_name ~ "/" if use_subdir else "" ]].pylintrc"
     ],
     "python.linting.enabled": true,
     "editor.formatOnSave": true,

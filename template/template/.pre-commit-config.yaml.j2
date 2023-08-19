@@ -43,7 +43,7 @@ repos:
         args: [
             "-rn", # Only display messages
             "-sn", # Don't display the score
-            "--rcfile=.project/.pylintrc", # Custom config file
+            "--rcfile=[[ subdir_name ~ "/" if use_subdir else "" ]].pylintrc", # Custom config file
           ]
   - repo: local
     hooks:

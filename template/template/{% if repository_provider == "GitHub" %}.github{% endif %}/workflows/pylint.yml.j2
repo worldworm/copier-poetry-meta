@@ -4,7 +4,7 @@ on:
   push:
     paths:
       - ".github/workflows/lint.yml"
-      - ".project/.pylintrc"
+      - "[[ subdir_name ~ "/" if use_subdir else "" ]].pylintrc"
       - "**.py"
   pull_request:
 
@@ -33,4 +33,4 @@ jobs:
           poetry install --no-root --no-interaction --no-ansi
       - name: Run pylint
         run: |
-          pylint --rcfile=.project/.pylintrc $(git ls-files '*.py')
+          pylint --rcfile=[[ subdir_name ~ "/" if use_subdir else "" ]].pylintrc $(git ls-files '*.py')
