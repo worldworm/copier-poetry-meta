@@ -12,7 +12,7 @@ permissions:
   contents: read
 
 jobs:
-  build:
+  build[[ "-" ~ subdir_name if use_subdir else "" ]]:
     runs-on: ubuntu-latest
     steps:
       - name: Login to Docker Hub
@@ -23,6 +23,9 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v4
         with:
+          [% if use_subdir -%]
+          context: "{{"{{ defaultContext }}"}}:[[ subdir_name ]]"
+          [% endif -%]
           push: {{"${{ github.event_name != 'pull_request' }}"}}
-          tags: {{"${{ github.repository }}"}}:{{"${{ github.sha }}"}}
-          cache-from: type=registry,ref={{"${{ github.repository }}"}}:edge
+          tags: {{"${{ github.repository }}"}}[[ "-" ~ subdir_name if use_subdir else "" ]]:{{"${{ github.sha }}"}}
+          cache-from: type=registry,ref={{"${{ github.repository }}"}}[[ "-" ~ subdir_name if use_subdir else "" ]]:edge
