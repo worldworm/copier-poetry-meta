@@ -1,11 +1,10 @@
-name: Test
+name: Lint
 
 on:
   push:
     paths:
-      - ".github/workflows/test.yml"
-      - "pyproject.toml"
-      - "poetry.lock"
+      - ".github/workflows/lint.yml"
+      - "[[ subdir_name ~ "/" if use_subdir else "" ]].pylintrc"
       - "**.py"
   pull_request:
 
@@ -13,23 +12,25 @@ permissions:
   contents: read
 
 jobs:
-  pytest:
+  pylint:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: ["3.11", "3.10", "3.9", "3.8"]
+    [% if use_subdir -%]
+    defaults:
+      run:
+        working-directory: [[ subdir_name ]]
+    [% endif -%]
     steps:
       - uses: actions/checkout@v3
-      - name: Set up Python ${{ matrix.python-version }}
+      - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: 3.x
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install poetry
           poetry config virtualenvs.create false
           poetry install --no-root --no-interaction --no-ansi
-      - name: Run pytest
+      - name: Run pylint
         run: |
-          pytest
+          pylint --rcfile=[[ subdir_name ~ "/" if use_subdir else "" ]].pylintrc $(git ls-files '*.py')

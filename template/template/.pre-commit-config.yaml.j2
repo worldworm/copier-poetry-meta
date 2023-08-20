@@ -11,20 +11,20 @@ repos:
       - id: check-added-large-files
   - repo: local
     hooks:
-      - id: check-poetry
-        name: Poetry check
-        description: Validates the structure of the pyproject.toml file
-        entry: poetry check
-        language: system
-        pass_filenames: false
-        files: pyproject.toml
-  - repo: local
-    hooks:
       - id: forbidden-files
         name: forbidden files
         entry: found Copier update rejection files; review them and remove them
         language: fail
         files: "\\.rej$"
+  - repo: local
+    hooks:
+      - id: check-poetry
+        name: Poetry check
+        description: Validates the structure of the pyproject.toml file
+        entry: poetry[[ " --directory " ~ subdir_name if use_subdir else "" ]] check
+        language: system
+        pass_filenames: false
+        files: pyproject.toml
   - repo: https://github.com/pre-commit/mirrors-autopep8
     rev: v2.0.2
     hooks:
@@ -43,12 +43,12 @@ repos:
         args: [
             "-rn", # Only display messages
             "-sn", # Don't display the score
-            "--rcfile=.project/.pylintrc", # Custom config file
+            "--rcfile=[[ subdir_name ~ "/" if use_subdir else "" ]].pylintrc", # Custom config file
           ]
   - repo: local
     hooks:
       - id: pytest
         name: pytest
-        entry: pytest
+        entry: pytest[[ " " ~ subdir_name if use_subdir else "" ]]
         language: system
         pass_filenames: false

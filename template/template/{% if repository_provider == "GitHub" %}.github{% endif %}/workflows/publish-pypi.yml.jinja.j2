@@ -10,6 +10,11 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    [% if use_subdir -%]
+    defaults:
+      run:
+        working-directory: [[ subdir_name ]]
+    [% endif -%]
     steps:
       - uses: actions/checkout@v3
         with:

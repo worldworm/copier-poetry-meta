@@ -13,3 +13,14 @@ _envops:
 template_suffix:
   type: str
   help: Template suffix
+
+use_subdir:
+  type: bool
+  help: Use subdir for project files?
+  default: false
+
+subdir_name:
+  type: str
+  help: Subdir name
+  default: "[[ 'backend' if use_subdir else '.' ~ sep ]]"
+  when: "[[ use_subdir ]]"
