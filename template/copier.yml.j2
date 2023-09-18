@@ -20,3 +20,7 @@ package_import_name:
   help: Package import name (for `import NAME` in Python code)
   default: "{{ project_name|lower|replace('-', '_')|replace(' ', '_') }}"
 
+use_dotenv:
+  type: bool
+  help: Use dotenv?
+  default: true

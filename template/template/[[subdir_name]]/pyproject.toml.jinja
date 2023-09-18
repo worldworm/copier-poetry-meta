@@ -12,7 +12,9 @@ packages = [{include = "{{ package_import_name }}"}]
 
 [tool.poetry.dependencies]
 python = ">=3.8,<4.0"
-
+{% if use_dotenv -%}
+pydantic-settings = "^2.0.3"
+{% endif %}
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^3.2.1"
 pytest = "^7.3.1"
