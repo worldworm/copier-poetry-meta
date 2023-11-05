@@ -6,6 +6,12 @@
     "pylint.args": [
         "--rcfile=[[ subdir_name ~ "/" if use_subdir else "" ]].pylintrc"
     ],
+    "autopep8.args": [
+        "--max-line-length=150"
+    ],
+    "isort.args": [
+        "--line-length=150"
+    ],
     "[python]": {
         "editor.tabSize": 4,
         "editor.defaultFormatter": "ms-python.autopep8",
