@@ -1,5 +1,5 @@
 # Changes here will be overwritten by Copier
-_commit: v1.0.0
+_commit: v1.1.0
 _src_path: https://github.com/worldworm/copier-base-copier.git
 answersfile_suffix: poetry-meta
 child_template_name: copier-poetry
@@ -7,6 +7,8 @@ child_template_url: https://github.com/worldworm/copier-poetry
 copyright_license: MIT
 copyright_year_start: 2023
 copyright_year_today: 2023
+is_bp: false
+is_ext: false
 is_meta: true
 need_trust: false
 project_description: Copier meta template for poetry projects.
