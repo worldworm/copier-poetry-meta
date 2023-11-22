@@ -8,4 +8,4 @@ services:
     restart: unless-stopped
     {% if use_dotenv -%}
     env_file: [[ subdir_name ~ "/" if use_subdir else "" ]].env
-    {% endif -%}
+    {%- endif %}
