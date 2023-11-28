@@ -20,7 +20,7 @@ pylint:
     - pip3 install poetry
     - poetry config virtualenvs.create false
     - poetry install --no-root --no-interaction --no-ansi
-    - pylint --rcfile=[[ subdir_name ~ "/" if use_subdir else "" ]].pylintrc $(git ls-files '*.py')
+    - pylint --rcfile=.pylintrc $(git ls-files '*.py')
 
 pytest:
   stage: test
