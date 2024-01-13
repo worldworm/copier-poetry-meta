@@ -2,9 +2,9 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
-class Config(BaseSettings):
-    """Configuration class loading from dotenv file."""
+class Settings(BaseSettings):
+    """Settings class loading from dotenv file."""
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
 
 
-config = Config()
+settings = Settings()
