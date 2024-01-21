@@ -1,0 +1,25 @@
+"""Database connection and session management."""
+from sqlalchemy import URL
+from sqlmodel import Session, SQLModel, create_engine
+
+from .config import settings
+
+
+db_args = {
+    "drivername": settings.DB_DRIVER,
+    "database": settings.DB_NAME,
+}
+if settings.DB_DRIVER != "sqlite":
+    db_args.update({
+        "username": settings.DB_USER,
+        "password": settings.DB_PASSWORD,
+        "host": settings.DB_HOST,
+    })
+DATABASE_URL = URL.create(**db_args)
+
+engine = create_engine(DATABASE_URL, echo=False)
+
+
+def create_db_and_tables():
+    """Create database and tables."""
+    SQLModel.metadata.create_all(engine)

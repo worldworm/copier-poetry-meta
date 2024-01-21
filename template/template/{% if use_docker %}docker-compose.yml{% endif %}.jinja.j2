@@ -8,4 +8,24 @@ services:
     restart: unless-stopped
     {% if use_dotenv -%}
     env_file: [[ subdir_name ~ "/" if use_subdir else "" ]].env
+    {% endif -%}
+    {% if use_database and database_type == "sqlite" -%}
+    volumes:
+      - ./data/db:/app/db
+    {% endif -%}
+    {% if use_database and database_type != "sqlite" -%}
+    depends_on:
+      - {{ project_name }}-db
+  {{ project_name }}-db:
+    image: {{ "mariadb:10" if database_type == "mysql" else "postgres:16" if database_type == "postgres" }}
+    container_name: {{ project_name }}-db
+    restart: unless-stopped
+    env_file: [[ subdir_name ~ "/" if use_subdir else "" ]].env
+    environment:
+      {{ "MARIADB_ROOT_PASSWORD" if database_type == "mysql" else "POSTGRES_PASSWORD" if database_type == "postgres" }}: ${DB_PASSWORD}
+      {{ "MARIADB_DATABASE" if database_type == "mysql" else "POSTGRES_DB" if database_type == "postgres" }}: ${DB_NAME}
+    volumes:
+      - ./data/db:{{ "/var/lib/mysql" if database_type == "mysql" else "/var/lib/postgresql/data" if database_type == "postgres"}}
+    # ports:
+    #   - {{ "3306:3306" if database_type == "mysql" else "5432:5432" if database_type == "postgres" }}
     {%- endif %}

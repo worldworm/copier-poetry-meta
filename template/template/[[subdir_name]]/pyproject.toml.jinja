@@ -14,6 +14,15 @@ packages = [{include = "{{ package_import_name }}"}]
 python = ">=3.8,<4.0"
 {% if use_dotenv -%}
 pydantic-settings = "^2.0.3"
+{% endif -%}
+{% if use_database -%}
+sqlmodel = "^0.0.14"
+{% if database_type == "postgres" -%}
+psycopg2-binary = "^2.9.9"
+{% endif -%}
+{% if database_type == "mysql" -%}
+pymysql = "^1.1.0"
+{% endif -%}
 {% endif %}
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^3.2.1"

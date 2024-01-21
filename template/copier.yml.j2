@@ -24,3 +24,19 @@ use_dotenv:
   type: bool
   help: Use dotenv?
   default: true
+
+use_database:
+  type: bool
+  help: Use database?
+  default: false
+  when: "{{ use_dotenv }}"
+
+database_type:
+  type: str
+  help: Database type
+  default: mysql
+  when: "{{ use_database }}"
+  choices:
+  - mysql
+  - postgres
+  - sqlite
