@@ -1,10 +1,15 @@
 """Database connection and session management."""
+from loguru import logger
 from sqlalchemy import URL
 from sqlmodel import Session, SQLModel, create_engine
-
+{% if use_database_migrations %}
+from alembic import command
+from alembic.config import Config
+{% endif %}
 from .config import settings
-
-
+{% if use_database_migrations %}
+alembic_config = Config("alembic.ini")
+{% endif %}
 db_args = {
     "drivername": settings.DB_DRIVER,
     "database": settings.DB_NAME,
@@ -23,3 +28,15 @@ engine = create_engine(DATABASE_URL, echo=False)
 def create_db_and_tables():
     """Create database and tables."""
     SQLModel.metadata.create_all(engine)
+
+{% if use_database_migrations %}
+def apply_migrations():
+    """Apply alembic db migrations to head."""
+    if settings.DB_AUTO_MIGRATE:
+        logger.info("Applying database migrations")
+        with Session(engine) as session:
+            alembic_config.attributes["connection"] = session.connection()
+            command.upgrade(alembic_config, "head")
+    else:
+        logger.info("Skipping database migrations")
+{% endif %}

@@ -12,11 +12,15 @@ packages = [{include = "{{ package_import_name }}"}]
 
 [tool.poetry.dependencies]
 python = ">=3.8,<4.0"
+loguru = "^0.7.2"
 {% if use_dotenv -%}
 pydantic-settings = "^2.0.3"
 {% endif -%}
 {% if use_database -%}
 sqlmodel = "^0.0.14"
+{% if use_database_migrations -%}
+alembic = "^1.13.1"
+{% endif -%}
 {% if database_type == "postgres" -%}
 psycopg2-binary = "^2.9.9"
 {% endif -%}

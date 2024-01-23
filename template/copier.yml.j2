@@ -40,3 +40,9 @@ database_type:
   - mysql
   - postgres
   - sqlite
+
+use_database_migrations:
+  type: bool
+  help: Use database migrations?
+  default: "{{ true if use_database else false }}"
+  when: "{{ use_database }}"
