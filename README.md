@@ -5,12 +5,21 @@
 
 
 <!-- Place https://shields.io/ badges here -->
+[![GitHub repo stars](https://img.shields.io/github/stars/worldworm/copier-poetry-meta)](https://github.com/worldworm/copier-poetry-meta)
+[![License](https://img.shields.io/badge/license-MIT-green?logo=opensourceinitiative&logoColor=fff)](https://github.com/worldworm/copier-poetry-meta/blob/main/LICENSE)
+[![GitHub last commit (main)](https://img.shields.io/github/last-commit/worldworm/copier-poetry-meta/main)](https://github.com/worldworm/copier-poetry-meta/commits/main/)
+[![GitHub release](https://img.shields.io/github/v/release/worldworm/copier-poetry-meta)](https://github.com/worldworm/copier-poetry-meta/releases/latest)
+[![GitHub commits since latest release](https://img.shields.io/github/commits-since/worldworm/copier-poetry-meta/latest/main)](https://github.com/worldworm/copier-poetry-meta/releases/latest)
+[![Copier supported version](https://img.shields.io/badge/Copier-v9-blue)](https://github.com/copier-org/copier)
+
 
 ## Features
 - [Poetry](https://github.com/python-poetry/poetry) setup with a pre-defined pyproject.toml
 - Continuous integration (CI) pipelines for Github Actions and GitLab CI/CD
 - Docker support with build and publish pipelines
 - Settings management using [pydantic-settings](https://github.com/pydantic/pydantic-settings)
+- Database support with [sqlmodel](https://github.com/tiangolo/sqlmodel) and mysql, postgres or sqlite configuration
+- [alembic](https://github.com/sqlalchemy/alembic) database migrations
 - [pre-commit](https://github.com/pre-commit/pre-commit) hooks
 - [pylint](https://github.com/pylint-dev/pylint) code linter
 - [pytest](https://github.com/pytest-dev/pytest/) unit tests
@@ -34,20 +43,21 @@ pip install copier
 
 Make sure the requirements are met, then:
 ```bash
-copier copy "https://github.com/worldworm/copier-poetry-meta.git" /new/project/path
+copier copy "https://github.com/worldworm/copier-poetry-meta.git" .
 ```
 
 ### Update
 To update a template after creating a project, run:
 ```bash
-copier update -a .project/.copier-answers.poetry-meta.yml /some/project/path
+copier update -a .project/.copier-answers.poetry-meta.yml .
 ```
+
 
 ## Explore more Copier templates
 In addition to this template, there are a number of other Copier templates available. For an overview of all available templates, visit the [Templates Showcase repository](https://github.com/worldworm/copier-showcase).
 
 ---
 <p align="center">
-  <i>© <a href="https://github.com/worldworm">worldworm</a> 2023</i><br>
-  <i>Licensed under <a href="https://github.com/worldworm/copier-poetry-meta/blob/main/LICENSE">MIT</a></i><br>
+  <i>© <a href="https://github.com/worldworm">worldworm</a> 2023-2024</i>
+  <br><i>Licensed under <a href="https://github.com/worldworm/copier-poetry-meta/blob/main/LICENSE">MIT</a></i>
 </p>
