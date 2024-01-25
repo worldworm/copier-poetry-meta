@@ -33,6 +33,7 @@ pre-commit = "^3.2.1"
 pytest = "^7.3.1"
 pytest-cov = "^4.0.0"
 pylint = "^2.17.4"
+poethepoet = "^0.24.4"
 
 [build-system]
 requires = ["poetry-core"]
@@ -43,3 +44,10 @@ max_line_length = 150
 
 [tool.isort]
 line_length = 150
+
+[tool.poe.tasks]
+run = "python -m {{ package_import_name }}.main"
+lint = "pylint {{ package_import_name }}"
+test = "pytest"
+cov = "pytest --cov={{ package_import_name }} --cov-report term --cov-report xml:coverage.xml"
+clean = "rm -rf ./**/*.pyc ./**/__pycache__ coverage.xml .coverage"

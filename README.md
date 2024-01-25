@@ -20,6 +20,7 @@
 - Settings management using [pydantic-settings](https://github.com/pydantic/pydantic-settings)
 - Database support with [sqlmodel](https://github.com/tiangolo/sqlmodel) and mysql, postgres or sqlite configuration
 - [alembic](https://github.com/sqlalchemy/alembic) database migrations
+- [poethepoet](https://github.com/nat-n/poethepoet) task runner
 - [pre-commit](https://github.com/pre-commit/pre-commit) hooks
 - [pylint](https://github.com/pylint-dev/pylint) code linter
 - [pytest](https://github.com/pytest-dev/pytest/) unit tests
