@@ -51,3 +51,10 @@ lint = "pylint {{ package_import_name }}"
 test = "pytest"
 cov = "pytest --cov={{ package_import_name }} --cov-report term --cov-report xml:coverage.xml"
 clean = "rm -rf ./**/*.pyc ./**/__pycache__ coverage.xml .coverage"
+{% if use_database_migrations -%}
+migrate = "alembic upgrade head"
+
+[tool.poe.tasks.revision]
+cmd = "alembic revision --autogenerate --message ${message}"
+args = [{name = "message", required = true, type = "string"}]
+{% endif %}
