@@ -37,6 +37,7 @@ def apply_migrations():
         with Session(engine) as session:
             alembic_config.attributes["connection"] = session.connection()
             command.upgrade(alembic_config, "head")
+            session.commit()
     else:
         logger.info("Skipping database migrations")
 {% endif %}
