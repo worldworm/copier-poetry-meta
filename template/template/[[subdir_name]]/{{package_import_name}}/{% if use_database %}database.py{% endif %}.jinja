@@ -25,12 +25,12 @@ DATABASE_URL = URL.create(**db_args)
 engine = create_engine(DATABASE_URL, echo=False)
 
 
-def create_db_and_tables():
+def create_db_and_tables():  # pragma: no cover
     """Create database and tables."""
     SQLModel.metadata.create_all(engine)
 
 {% if use_database_migrations %}
-def apply_migrations():
+def apply_migrations():  # pragma: no cover
     """Apply alembic db migrations to head."""
     if settings.DB_AUTO_MIGRATE:
         logger.info("Applying database migrations")
