@@ -1,3 +1,17 @@
+{%- if use_database and database_type == "mysql" -%}
+{% set database_image = "mariadb:10" -%}
+{% set database_env_pwd = "MARIADB_ROOT_PASSWORD" -%}
+{% set database_env_db = "MARIADB_DATABASE" -%}
+{% set database_env_volume = "/var/lib/mysql" -%}
+{% set database_port = "3306:3306" -%}
+{%- elif use_database and database_type == "postgres" -%}
+{% set database_image = "postgres:16" -%}
+{% set database_env_pwd = "POSTGRES_PASSWORD" -%}
+{% set database_env_db = "POSTGRES_DB" -%}
+{% set database_env_volume = "/var/lib/postgresql/data" -%}
+{% set database_port = "5432:5432" -%}
+{%- endif -%}
+
 version: "3"
 
 services:
@@ -17,15 +31,15 @@ services:
     depends_on:
       - {{ project_name }}-db
   {{ project_name }}-db:
-    image: {{ "mariadb:10" if database_type == "mysql" else "postgres:16" if database_type == "postgres" }}
+    image: {{ database_image }}
     container_name: {{ project_name }}-db
     restart: unless-stopped
     env_file: [[ subdir_name ~ "/" if use_subdir else "" ]].env
     environment:
-      {{ "MARIADB_ROOT_PASSWORD" if database_type == "mysql" else "POSTGRES_PASSWORD" if database_type == "postgres" }}: ${DB_PASSWORD}
-      {{ "MARIADB_DATABASE" if database_type == "mysql" else "POSTGRES_DB" if database_type == "postgres" }}: ${DB_NAME}
+      {{ database_env_pwd }}: ${DB_PASSWORD}
+      {{ database_env_db }}: ${DB_NAME}
     volumes:
-      - ./data/db:{{ "/var/lib/mysql" if database_type == "mysql" else "/var/lib/postgresql/data" if database_type == "postgres"}}
+      - ./data/db:{{ database_env_volume }}
     # ports:
-    #   - {{ "3306:3306" if database_type == "mysql" else "5432:5432" if database_type == "postgres" }}
+    #   - {{ database_port }}
     {%- endif %}
