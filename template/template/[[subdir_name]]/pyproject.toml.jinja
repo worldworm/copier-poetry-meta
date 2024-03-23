@@ -45,12 +45,17 @@ max_line_length = 150
 [tool.isort]
 line_length = 150
 
+[tool.poe.poetry_hooks]
+post_install = "pre-commit-install"
+
 [tool.poe.tasks]
 run = "python -m {{ package_import_name }}.main"
 lint = "pylint {{ package_import_name }}"
 test = "pytest"
 cov = "pytest --cov={{ package_import_name }} --cov-report term --cov-report xml:coverage.xml"
 clean = "rm -rf ./**/*.pyc ./**/__pycache__ coverage.xml .coverage"
+pre-commit-install.shell = "[ -d .git ] && poetry run pre-commit install --install-hooks || ( [ ! -d .git ] && echo 'Skipping pre-commit install because this is not a git repository!' )"
+pre-commit-run = "pre-commit run --all-files"
 {% if use_database_migrations -%}
 migrate = "alembic upgrade head"
 
