@@ -27,7 +27,7 @@ pytest:
   image: python:${PY_VERSION}
   parallel:
     matrix:
-      - PY_VERSION: ["3.11", "3.10", "3.9", "3.8"]
+      - PY_VERSION: ["3.11", "3.10", "3.9"]
   only:
     changes:
       - .gitlab-ci.yml
