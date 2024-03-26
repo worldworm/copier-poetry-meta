@@ -40,6 +40,10 @@ repos:
     hooks:
       - id: isort
         args: [--line-length=150]
+  - repo: https://github.com/DanielNoord/pydocstringformatter
+    rev: v0.7.3
+    hooks:
+      - id: pydocstringformatter
   - repo: local
     hooks:
       - id: pylint

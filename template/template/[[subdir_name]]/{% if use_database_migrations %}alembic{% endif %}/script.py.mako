@@ -2,7 +2,7 @@
 Message: ${message}
 Revision ID: ${up_revision}
 Revises: ${down_revision | comma,n}
-Create Date: ${create_date}
+Create Date: ${create_date}.
 """
 # pylint: disable=invalid-name,no-member,unused-import,unnecessary-pass
 
