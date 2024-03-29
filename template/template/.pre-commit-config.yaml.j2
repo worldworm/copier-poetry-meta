@@ -53,7 +53,7 @@ repos:
     hooks:
       - id: pylint
         name: pylint
-        entry: poetry run pylint
+        entry: poetry[[ " --directory " ~ subdir_name if use_subdir else "" ]] run pylint
         language: system
         types: [python]
         args: [
@@ -65,6 +65,6 @@ repos:
     hooks:
       - id: pytest
         name: pytest
-        entry: poetry run pytest[[ " " ~ subdir_name if use_subdir else "" ]]
+        entry: poetry[[ " --directory " ~ subdir_name if use_subdir else "" ]] run pytest[[ " " ~ subdir_name if use_subdir else "" ]]
         language: system
         pass_filenames: false
