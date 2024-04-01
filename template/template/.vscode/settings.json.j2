@@ -6,6 +6,9 @@
     "pylint.args": [
         "--rcfile=[[ subdir_name ~ "/" if use_subdir else "" ]].pylintrc"
     ],
+    "mypy-type-checker.args": [
+        "--config-file=[[ subdir_name ~ "/" if use_subdir else "" ]]pyproject.toml"
+    ],
     "autopep8.args": [
         "--max-line-length=150"
     ],

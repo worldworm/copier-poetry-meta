@@ -20,17 +20,17 @@ if settings.DB_DRIVER != "sqlite":
         "password": settings.DB_PASSWORD,
         "host": settings.DB_HOST,
     })
-DATABASE_URL = URL.create(**db_args)
+DATABASE_URL = URL.create(**db_args)  # type: ignore
 
 engine = create_engine(DATABASE_URL, echo=False)
 
 
-def create_db_and_tables():  # pragma: no cover
+def create_db_and_tables() -> None:  # pragma: no cover
     """Create database and tables."""
     SQLModel.metadata.create_all(engine)
 
 {% if use_database_migrations %}
-def apply_migrations():  # pragma: no cover
+def apply_migrations() -> None:  # pragma: no cover
     """Apply alembic db migrations to head."""
     if settings.DB_AUTO_MIGRATE:
         logger.info("Applying database migrations")

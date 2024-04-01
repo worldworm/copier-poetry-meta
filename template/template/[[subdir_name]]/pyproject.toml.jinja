@@ -36,6 +36,7 @@ pylint = "^3.1.0"
 poethepoet = "^0.25.0"
 pydocstringformatter = "^0.7.3"
 bandit = "^1.7.8"
+mypy = "^1.9.0"
 
 [build-system]
 requires = ["poetry-core"]
@@ -52,12 +53,19 @@ write = true
 strip-whitespaces = true
 split-summary-body = false
 
+[tool.mypy]
+strict = true
+ignore_missing_imports = true
+plugins = ["pydantic.mypy"]
+exclude = "tests/*"
+
 [tool.poe.poetry_hooks]
 post_install = "pre-commit-install"
 
 [tool.poe.tasks]
 run = "python -m {{ package_import_name }}.main"
 lint = "pylint {{ package_import_name }}"
+mypy = "mypy ."
 test = "pytest"
 cov = "pytest --cov={{ package_import_name }} --cov-report term --cov-report xml:coverage.xml"
 clean = "rm -rf ./**/*.pyc ./**/__pycache__ coverage.xml .coverage"
