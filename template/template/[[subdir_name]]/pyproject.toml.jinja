@@ -37,6 +37,7 @@ poethepoet = "^0.25.0"
 pydocstringformatter = "^0.7.3"
 bandit = "^1.7.8"
 mypy = "^1.9.0"
+autopep8 = "^2.1.0"
 
 [build-system]
 requires = ["poetry-core"]
@@ -75,6 +76,10 @@ post_install = "pre-commit-install"
     [tool.poe.tasks.types]
     help = "Type-check the project"
     cmd = "mypy ."
+
+    [tool.poe.tasks.style]
+    help = "Format the code"
+    cmd  = "autopep8 --in-place --recursive ."
 
     [tool.poe.tasks.test]
     help = "Run unit tests"
@@ -119,7 +124,8 @@ post_install = "pre-commit-install"
 
     [tool.poe.tasks.check]
     help     = "Run all checks on the code base"
-    sequence = ["docstringformatter", "bandit", "types", "lint", "test"]
+    sequence = ["docstringformatter", "style", "bandit", "types", "lint", "test"]
+    ignore_fail = "return_non_zero"
 {% if use_database_migrations %}
     [tool.poe.tasks.migrate]
     help = "Run database migrations"
