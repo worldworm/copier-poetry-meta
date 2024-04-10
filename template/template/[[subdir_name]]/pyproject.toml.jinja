@@ -63,20 +63,70 @@ exclude = "tests/*"
 post_install = "pre-commit-install"
 
 [tool.poe.tasks]
-run = "python -m {{ package_import_name }}.main"
-lint = "pylint {{ package_import_name }}"
-mypy = "mypy ."
-test = "pytest"
-cov = "pytest --cov={{ package_import_name }} --cov-report term --cov-report xml:coverage.xml"
-clean = "rm -rf ./**/*.pyc ./**/__pycache__ coverage.xml .coverage"
-pre-commit-install.shell = "[ -d .git ] && poetry run pre-commit install --install-hooks || ( [ ! -d .git ] && echo 'Skipping pre-commit install because this is not a git repository!' )"
-pre-commit-run = "pre-commit run --all-files"
-docstringformatter = "pydocstringformatter ."
-bandit = "bandit -r {{ package_import_name }}"
-{% if use_database_migrations -%}
-migrate = "alembic upgrade head"
 
-[tool.poe.tasks.revision]
-cmd = "alembic revision --autogenerate --message ${message}"
-args = [{name = "message", required = true, type = "string"}]
+    [tool.poe.tasks.run]
+    help = "Start the project"
+    cmd = "python -m {{ package_import_name }}.main"
+
+    [tool.poe.tasks.lint]
+    help = "Lint the project"
+    cmd = "pylint {{ package_import_name }}"
+
+    [tool.poe.tasks.types]
+    help = "Type-check the project"
+    cmd = "mypy ."
+
+    [tool.poe.tasks.test]
+    help = "Run unit tests"
+    cmd = "pytest"
+
+    [tool.poe.tasks.cov]
+    help = "Run unit tests with coverage"
+    cmd = "pytest --cov={{ package_import_name }} --cov-report term --cov-report xml:coverage.xml"
+
+    [tool.poe.tasks.clean]
+    help = "Clean up project files"
+    cmd = """
+        rm -rf ./**/*.pyc
+               ./**/__pycache__
+               .mypy_cache
+               .pytest_cache
+               coverage.xml
+               .coverage
+    """
+
+    [tool.poe.tasks.pre-commit-install]
+    help = "Install pre-commit hooks"
+    shell = """
+        if [ -d .git ]; then
+            poetry run pre-commit install --install-hooks
+        else
+            echo "Skipping pre-commit install because this is not a git repository!"
+        fi
+    """
+
+    [tool.poe.tasks.pre-commit-run]
+    help = "Run pre-commit checks"
+    cmd = "pre-commit run --all-files"  
+
+    [tool.poe.tasks.docstringformatter]
+    help = "Format docstrings"
+    cmd = "pydocstringformatter ."
+
+    [tool.poe.tasks.bandit]
+    help = "Run security checks"
+    cmd = "bandit -r {{ package_import_name }}"
+
+    [tool.poe.tasks.check]
+    help     = "Run all checks on the code base"
+    sequence = ["docstringformatter", "bandit", "types", "lint", "test"]
+{% if use_database_migrations %}
+    [tool.poe.tasks.migrate]
+    help = "Run database migrations"
+    cmd = "alembic upgrade head"
+
+    [tool.poe.tasks.revision]
+    help = "Create a new database revision (--message required)"
+    cmd = "alembic revision --autogenerate --message ${message}"
+    args = [{name = "message", required = true, type = "string"}]
 {% endif %}
