@@ -103,7 +103,7 @@ post_install = "pre-commit-install"
     [tool.poe.tasks.pre-commit-install]
     help = "Install pre-commit hooks"
     shell = """
-        if [ -d .git ]; then
+        if git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
             poetry run pre-commit install --install-hooks
         else
             echo "Skipping pre-commit install because this is not a git repository!"
