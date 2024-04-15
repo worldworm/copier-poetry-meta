@@ -20,7 +20,7 @@ pylint:
     - pip3 install poetry
     - poetry config virtualenvs.create false
     - poetry install --no-root --no-interaction --no-ansi
-    - pylint --rcfile=.pylintrc $(git ls-files '*.py')
+    - poetry run poe lint
 
 pytest:
   stage: test
@@ -43,7 +43,7 @@ pytest:
     - pip3 install poetry
     - poetry config virtualenvs.create false
     - poetry install --no-root --no-interaction --no-ansi
-    - pytest --cov={{package_import_name}} --cov-report term --cov-report xml:coverage.xml
+    - poetry run poe cov
   coverage: '/(?i)total.*? (100(?:\.0+)?\%|[1-9]?\d(?:\.\d+)?\%)$/'
   artifacts:
     reports:
