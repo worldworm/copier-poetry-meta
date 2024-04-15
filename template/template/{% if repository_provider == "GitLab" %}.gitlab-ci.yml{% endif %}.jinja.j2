@@ -25,6 +25,33 @@ pylint:
     - *poetry-install
     - poetry run poe lint
 
+mypy:
+  stage: test
+  image: $IMAGE_PYTHON
+  only:
+    changes:
+      - .gitlab-ci.yml
+      - pyproject.toml
+      - "**/*.py"
+  # tags:
+  #   - docker
+  script:
+    - *poetry-install
+    - poetry run poe types
+
+bandit:
+  stage: test
+  image: $IMAGE_PYTHON
+  only:
+    changes:
+      - .gitlab-ci.yml
+      - "**/*.py"
+  # tags:
+  #   - docker
+  script:
+    - *poetry-install
+    - poetry run poe bandit
+
 pytest:
   stage: test
   image: python:${PY_VERSION}
