@@ -3,6 +3,14 @@ stages:
   - build
   - publish
 
+.poetry-install: &poetry-install
+  [% if use_subdir -%]
+  - cd [[ subdir_name ]]
+  [% endif -%]
+  - pip3 install -q --cache-dir=.pip poetry
+  - poetry config virtualenvs.in-project true
+  - poetry install --no-root --no-interaction --no-ansi
+
 pylint:
   stage: test
   image: $IMAGE_PYTHON
@@ -14,12 +22,7 @@ pylint:
   # tags:
   #   - docker
   script:
-    [% if use_subdir -%]
-    - cd [[ subdir_name ]]
-    [% endif -%]
-    - pip3 install poetry
-    - poetry config virtualenvs.create false
-    - poetry install --no-root --no-interaction --no-ansi
+    - *poetry-install
     - poetry run poe lint
 
 pytest:
@@ -37,12 +40,7 @@ pytest:
   # tags:
   #   - docker
   script:
-    [% if use_subdir -%]
-    - cd [[ subdir_name ]]
-    [% endif -%]
-    - pip3 install poetry
-    - poetry config virtualenvs.create false
-    - poetry install --no-root --no-interaction --no-ansi
+    - *poetry-install
     - poetry run poe cov
   coverage: '/(?i)total.*? (100(?:\.0+)?\%|[1-9]?\d(?:\.\d+)?\%)$/'
   artifacts:
