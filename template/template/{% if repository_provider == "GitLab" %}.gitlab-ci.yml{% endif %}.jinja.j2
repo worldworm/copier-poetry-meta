@@ -5,7 +5,7 @@ stages:
 
 pylint:
   stage: test
-  image: python:3.10
+  image: $IMAGE_PYTHON
   only:
     changes:
       - .gitlab-ci.yml
@@ -51,8 +51,9 @@ pytest:
         coverage_format: cobertura
         path: coverage.xml
 
-{% if use_docker -%}
 variables:
+  IMAGE_PYTHON: "python:3.10"
+  {% if use_docker -%}
   DOCKER_REGISTRY_LOGIN: docker login -u $DOCKER_REGISTRY_USER -p $DOCKER_REGISTRY_PASSWORD $DOCKER_REGISTRY
   DOCKER_REGISTRY_LOGOUT: docker logout $DOCKER_REGISTRY
   DOCKER_IMAGE_NAME: $DOCKER_REGISTRY/$DOCKER_NAMESPACE/$CI_PROJECT_NAME
