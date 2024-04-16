@@ -77,7 +77,7 @@ post_install = "pre-commit-install"
     help = "Type-check the project"
     cmd = "mypy ."
 
-    [tool.poe.tasks.style]
+    [tool.poe.tasks.format]
     help = "Format the code"
     cmd  = "autopep8 --in-place --recursive ."
 
@@ -122,9 +122,14 @@ post_install = "pre-commit-install"
     help = "Run security checks"
     cmd = "bandit -r {{ package_import_name }}"
 
+    [tool.poe.tasks.style]
+    help     = "Run all style formatters on the code base"
+    sequence = ["docstringformatter", "format"]
+    ignore_fail = "return_non_zero"
+
     [tool.poe.tasks.check]
     help     = "Run all checks on the code base"
-    sequence = ["docstringformatter", "style", "bandit", "types", "lint", "test"]
+    sequence = ["style", "bandit", "types", "lint", "test"]
     ignore_fail = "return_non_zero"
 {% if use_database_migrations %}
     [tool.poe.tasks.migrate]
