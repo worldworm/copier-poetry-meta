@@ -1,7 +1,21 @@
 stages:
+  - prepare
   - test
   - build
   - publish
+
+default:
+  cache:
+    - &poetry-cache
+      key:
+        prefix: "poetry"
+        files:
+          - [[ subdir_name ~ "/" if use_subdir else "" ]]poetry.lock
+          - .gitlab-ci.yml
+      paths:
+        - [[ subdir_name ~ "/" if use_subdir else "" ]].venv
+        - [[ subdir_name ~ "/" if use_subdir else "" ]].pip
+      policy: pull
 
 .poetry-install: &poetry-install
   [% if use_subdir -%]
@@ -11,6 +25,17 @@ stages:
   - poetry config virtualenvs.in-project true
   - poetry install --no-root --no-interaction --no-ansi
 
+poetry_cache:
+  stage: prepare
+  image: $IMAGE_PYTHON
+  tags:
+    - $RUNNER_TEST
+  cache:
+    - <<: *poetry-cache
+      policy: pull-push
+  script:
+    - *poetry-install
+
 pylint:
   stage: test
   image: $IMAGE_PYTHON
@@ -19,6 +44,7 @@ pylint:
       - .gitlab-ci.yml
       - [[ subdir_name ~ "/" if use_subdir else "" ]].pylintrc
       - "**/*.py"
+  cache: [*poetry-cache]
   tags:
     - $RUNNER_TEST
   script:
@@ -31,8 +57,9 @@ mypy:
   only:
     changes:
       - .gitlab-ci.yml
-      - pyproject.toml
+      - [[ subdir_name ~ "/" if use_subdir else "" ]]pyproject.toml
       - "**/*.py"
+  cache: [*poetry-cache]
   tags:
     - $RUNNER_TEST
   script:
@@ -46,6 +73,7 @@ bandit:
     changes:
       - .gitlab-ci.yml
       - "**/*.py"
+  cache: [*poetry-cache]
   tags:
     - $RUNNER_TEST
   script:
@@ -61,9 +89,10 @@ pytest:
   only:
     changes:
       - .gitlab-ci.yml
-      - pyproject.toml
-      - poetry.lock
+      - [[ subdir_name ~ "/" if use_subdir else "" ]]pyproject.toml
+      - [[ subdir_name ~ "/" if use_subdir else "" ]]poetry.lock
       - "**/*.py"
+  cache: [*poetry-cache]
   tags:
     - $RUNNER_TEST
   script:
@@ -108,6 +137,7 @@ build-docker[[ "-" ~ subdir_name if use_subdir else "" ]]:
   variables:
     DOCKER_IMAGE_SUFFIX: [[ subdir_name ]]
 [%- endif %]
+  cache: []
   tags:
     - $RUNNER_BUILD
   script:
@@ -124,6 +154,7 @@ publish-docker[[ "-" ~ subdir_name if use_subdir else "" ]]-edge:
 [%- if use_subdir %]
     DOCKER_IMAGE_SUFFIX: [[ subdir_name ]]
 [%- endif %]
+  cache: []
   tags:
     - $RUNNER_BUILD
   script:
@@ -140,6 +171,7 @@ publish-docker[[ "-" ~ subdir_name if use_subdir else "" ]]-release:
 [%- if use_subdir %]
     DOCKER_IMAGE_SUFFIX: [[ subdir_name ]]
 [%- endif %]
+  cache: []
   tags:
     - $RUNNER_BUILD
   script:
@@ -156,6 +188,7 @@ publish-docker[[ "-" ~ subdir_name if use_subdir else "" ]]-latest:
 [%- if use_subdir %]
     DOCKER_IMAGE_SUFFIX: [[ subdir_name ]]
 [%- endif %]
+  cache: []
   tags:
     - $RUNNER_BUILD
   script:
