@@ -38,6 +38,7 @@ pydocstringformatter = "^0.7.3"
 bandit = "^1.7.8"
 mypy = "^1.9.0"
 autopep8 = "^2.1.0"
+isort = "^5.13.2"
 
 [build-system]
 requires = ["poetry-core"]
@@ -118,13 +119,17 @@ post_install = "pre-commit-install"
     help = "Format docstrings"
     cmd = "pydocstringformatter ."
 
+    [tool.poe.tasks.sort]
+    help = "Sort imports"
+    cmd = "isort ."
+
     [tool.poe.tasks.bandit]
     help = "Run security checks"
     cmd = "bandit -r {{ package_import_name }}"
 
     [tool.poe.tasks.style]
     help     = "Run all style formatters on the code base"
-    sequence = ["docstringformatter", "format"]
+    sequence = ["docstringformatter", "sort", "format"]
     ignore_fail = "return_non_zero"
 
     [tool.poe.tasks.check]
