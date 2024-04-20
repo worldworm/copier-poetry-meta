@@ -40,15 +40,13 @@ repos:
     hooks:
       - id: isort
         args: [--line-length=150]
-  - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.9.0
+  - repo: local  # see https://github.com/worldworm/copier-poetry-meta/issues/7
     hooks:
       - id: mypy
-        args: [--config-file=[[ subdir_name ~ "/" if use_subdir else "" ]]pyproject.toml]
-        language: python
-        types: [python]
-        additional_dependencies: [pydantic-settings]
-        exclude: tests(/\w*)*
+        name: mypy
+        entry: poetry[[ " --directory " ~ subdir_name if use_subdir else "" ]] run mypy --config-file=[[ subdir_name ~ "/" if use_subdir else "" ]]pyproject.toml [[ "" ~ subdir_name if use_subdir else "." ]]
+        language: system
+        pass_filenames: false
   - repo: https://github.com/DanielNoord/pydocstringformatter
     rev: v0.7.3
     hooks:
