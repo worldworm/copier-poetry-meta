@@ -28,6 +28,13 @@ default:
 poetry_cache:
   stage: prepare
   image: $IMAGE_PYTHON
+  only:
+    changes:
+      - "**/*.py"
+      - .gitlab-ci.yml
+      - [[ subdir_name ~ "/" if use_subdir else "" ]].pylintrc
+      - [[ subdir_name ~ "/" if use_subdir else "" ]]pyproject.toml
+      - [[ subdir_name ~ "/" if use_subdir else "" ]]poetry.lock
   tags:
     - $RUNNER_TEST
   cache:
