@@ -125,7 +125,7 @@ post_install = "pre-commit-install"
 
     [tool.poe.tasks.bandit]
     help = "Run security checks"
-    cmd = "bandit -r {{ package_import_name }}"
+    cmd = "bandit -c pyproject.toml -r {{ package_import_name }}"
 
     [tool.poe.tasks.style]
     help     = "Run all style formatters on the code base"
